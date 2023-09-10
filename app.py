@@ -17,7 +17,7 @@ if not torch.cuda.is_available():
 MAX_SEED = np.iinfo(np.int32).max
 CACHE_EXAMPLES = torch.cuda.is_available() and os.getenv("CACHE_EXAMPLES") == "1"
 MAX_IMAGE_SIZE = int(os.getenv("MAX_IMAGE_SIZE", "1536"))
-USE_TORCH_COMPILE = os.getenv("USE_TORCH_COMPILE") == "1"
+USE_TORCH_COMPILE = True
 ENABLE_CPU_OFFLOAD = os.getenv("ENABLE_CPU_OFFLOAD") == "1"
 PREVIEW_IMAGES = True
 
