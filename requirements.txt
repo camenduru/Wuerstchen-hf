@@ -1,0 +1,7 @@
+accelerate==0.22.0
+diffusers @ git+https://github.com/dome272/diffusers
+gradio==3.42.0
+invisible-watermark==0.2.0
+Pillow==10.0.0
+torch==2.0.1
+transformers==4.32.1
