@@ -12,8 +12,9 @@ from previewer.modules import Previewer
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
 DESCRIPTION = "# Würstchen"
+DESCRIPTION += "\n<p style=\"text-align: center\"><a href='https://huggingface.co/warp-ai/wuerstchen' target='_blank'>Würstchen</a> is a new fast and efficient high resolution text-to-image architecture and model</p>"
 if not torch.cuda.is_available():
-    DESCRIPTION += "\n<p>Running on CPU 🥶 This demo does not work on CPU.</p>"
+    DESCRIPTION += "\n<p>Running on CPU 🥶</p>"
 
 MAX_SEED = np.iinfo(np.int32).max
 CACHE_EXAMPLES = torch.cuda.is_available() and os.getenv("CACHE_EXAMPLES") == "1"
