@@ -19,7 +19,7 @@ if not torch.cuda.is_available():
 MAX_SEED = np.iinfo(np.int32).max
 CACHE_EXAMPLES = torch.cuda.is_available() and os.getenv("CACHE_EXAMPLES") == "1"
 MAX_IMAGE_SIZE = int(os.getenv("MAX_IMAGE_SIZE", "1536"))
-USE_TORCH_COMPILE = False
+USE_TORCH_COMPILE = True
 ENABLE_CPU_OFFLOAD = os.getenv("ENABLE_CPU_OFFLOAD") == "1"
 PREVIEW_IMAGES = True
 
@@ -152,16 +152,16 @@ with gr.Blocks(css="style.css") as demo:
         with gr.Row():
             width = gr.Slider(
                 label="Width",
-                minimum=768,
+                minimum=1024,
                 maximum=MAX_IMAGE_SIZE,
-                step=128,
+                step=512,
                 value=1024,
             )
             height = gr.Slider(
                 label="Height",
-                minimum=768,
+                minimum=1024,
                 maximum=MAX_IMAGE_SIZE,
-                step=128,
+                step=512,
                 value=1024,
             )
             num_images_per_prompt = gr.Slider(
