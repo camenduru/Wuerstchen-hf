@@ -9,6 +9,7 @@ from diffusers.utils import numpy_to_pil
 from diffusers import WuerstchenDecoderPipeline, WuerstchenPriorPipeline
 from diffusers.pipelines.wuerstchen import WuerstchenPrior, default_stage_c_timesteps
 from previewer.modules import Previewer
+os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
 DESCRIPTION = "# Würstchen"
 if not torch.cuda.is_available():
@@ -17,7 +18,7 @@ if not torch.cuda.is_available():
 MAX_SEED = np.iinfo(np.int32).max
 CACHE_EXAMPLES = torch.cuda.is_available() and os.getenv("CACHE_EXAMPLES") == "1"
 MAX_IMAGE_SIZE = int(os.getenv("MAX_IMAGE_SIZE", "1536"))
-USE_TORCH_COMPILE = True
+USE_TORCH_COMPILE = False
 ENABLE_CPU_OFFLOAD = os.getenv("ENABLE_CPU_OFFLOAD") == "1"
 PREVIEW_IMAGES = True
 
