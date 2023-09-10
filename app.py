@@ -173,7 +173,7 @@ with gr.Blocks(css="style.css") as demo:
         with gr.Row():
             prior_guidance_scale = gr.Slider(
                 label="Prior Guidance Scale",
-                minimum=1,
+                minimum=0,
                 maximum=20,
                 step=0.1,
                 value=4.0,
@@ -188,7 +188,7 @@ with gr.Blocks(css="style.css") as demo:
 
             decoder_guidance_scale = gr.Slider(
                 label="Decoder Guidance Scale",
-                minimum=1,
+                minimum=0,
                 maximum=20,
                 step=0.1,
                 value=0.0,
