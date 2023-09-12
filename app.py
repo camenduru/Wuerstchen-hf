@@ -7,7 +7,7 @@ import torch
 from typing import List
 from diffusers.utils import numpy_to_pil
 from diffusers import WuerstchenDecoderPipeline, WuerstchenPriorPipeline
-from diffusers.pipelines.wuerstchen import WuerstchenPrior, DEFAULT_STAGE_C_TIMESTEPS
+from diffusers.pipelines.wuerstchen import DEFAULT_STAGE_C_TIMESTEPS
 from previewer.modules import Previewer
 from compel import Compel
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
