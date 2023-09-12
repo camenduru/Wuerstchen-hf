@@ -12,6 +12,7 @@ from previewer.modules import Previewer
 from compel import Compel
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
+
 DESCRIPTION = "# Würstchen"
 DESCRIPTION += "\n<p style=\"text-align: center\"><a href='https://huggingface.co/warp-ai/wuerstchen' target='_blank'>Würstchen</a> is a new fast and efficient high resolution text-to-image architecture and model</p>"
 if not torch.cuda.is_available():
