@@ -7,8 +7,9 @@ import torch
 from typing import List
 from diffusers.utils import numpy_to_pil
 from diffusers import WuerstchenDecoderPipeline, WuerstchenPriorPipeline
-from diffusers.pipelines.wuerstchen import WuerstchenPrior, default_stage_c_timesteps
+from diffusers.pipelines.wuerstchen import WuerstchenPrior, DEFAULT_STAGE_C_TIMESTEPS
 from previewer.modules import Previewer
+from compel import Compel
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
 DESCRIPTION = "# Würstchen"
@@ -19,7 +20,7 @@ if not torch.cuda.is_available():
 MAX_SEED = np.iinfo(np.int32).max
 CACHE_EXAMPLES = torch.cuda.is_available() and os.getenv("CACHE_EXAMPLES") == "1"
 MAX_IMAGE_SIZE = int(os.getenv("MAX_IMAGE_SIZE", "1536"))
-USE_TORCH_COMPILE = True
+USE_TORCH_COMPILE = False
 ENABLE_CPU_OFFLOAD = os.getenv("ENABLE_CPU_OFFLOAD") == "1"
 PREVIEW_IMAGES = True
 
@@ -51,6 +52,7 @@ if torch.cuda.is_available():
     else:
         previewer = None
         callback_prior = None
+    compel_proc = Compel(tokenizer=prior_pipeline.tokenizer, text_encoder=prior_pipeline.text_encoder)
 else:
     prior_pipeline = None
     decoder_pipeline = None
@@ -78,12 +80,16 @@ def generate(
 ) -> PIL.Image.Image:
     generator = torch.Generator().manual_seed(seed)
 
+    print("Running compel")
+    prompt_embeds = compel_proc(prompt)
+    negative_prompt_embeds = compel_proc(negative_prompt)
+
     prior_output = prior_pipeline(
-        prompt=prompt,
+        prompt_embeds=prompt_embeds,
         height=height,
         width=width,
-        timesteps=default_stage_c_timesteps,
-        negative_prompt=negative_prompt,
+        timesteps=DEFAULT_STAGE_C_TIMESTEPS,
+        negative_prompt_embeds=negative_prompt_embeds,
         guidance_scale=prior_guidance_scale,
         num_images_per_prompt=num_images_per_prompt,
         generator=generator,
@@ -91,7 +97,7 @@ def generate(
     )
 
     if PREVIEW_IMAGES:
-        for _ in range(len(default_stage_c_timesteps)):
+        for _ in range(len(DEFAULT_STAGE_C_TIMESTEPS)):
             r = next(prior_output)
             if isinstance(r, list):
                 yield r
