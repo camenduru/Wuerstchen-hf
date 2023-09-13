@@ -173,7 +173,7 @@ with gr.Blocks(css="style.css") as demo:
             num_images_per_prompt = gr.Slider(
                 label="Number of Images",
                 minimum=1,
-                maximum=6,
+                maximum=2,
                 step=1,
                 value=2,
             )
@@ -203,7 +203,7 @@ with gr.Blocks(css="style.css") as demo:
             decoder_num_inference_steps = gr.Slider(
                 label="Decoder Inference Steps",
                 minimum=10,
-                maximum=100,
+                maximum=12,
                 step=1,
                 value=12,
             )
