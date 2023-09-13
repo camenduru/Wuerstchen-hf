@@ -13,8 +13,6 @@ os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
 DESCRIPTION = "# Würstchen"
 DESCRIPTION += "\n<p style=\"text-align: center\"><a href='https://huggingface.co/warp-ai/wuerstchen' target='_blank'>Würstchen</a> is a new fast and efficient high resolution text-to-image architecture and model</p>"
-if not torch.cuda.is_available():
-    DESCRIPTION += "\n<p>Running on CPU 🥶</p>"
 
 MAX_SEED = np.iinfo(np.int32).max
 CACHE_EXAMPLES = torch.cuda.is_available() and os.getenv("CACHE_EXAMPLES") == "1"
@@ -117,11 +115,6 @@ examples = [
 
 with gr.Blocks(css="style.css") as demo:
     gr.Markdown(DESCRIPTION)
-    gr.DuplicateButton(
-        value="Duplicate Space for private use",
-        elem_id="duplicate-button",
-        visible=os.getenv("SHOW_DUPLICATE_BUTTON") == "1",
-    )
     with gr.Group():
         with gr.Row():
             prompt = gr.Text(
@@ -261,4 +254,4 @@ with gr.Blocks(css="style.css") as demo:
     )
 
 if __name__ == "__main__":
-    demo.queue(max_size=20).launch()
+    demo.queue(max_size=20, inline=True).launch()
