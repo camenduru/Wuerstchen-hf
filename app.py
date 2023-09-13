@@ -21,7 +21,7 @@ if not torch.cuda.is_available():
 MAX_SEED = np.iinfo(np.int32).max
 CACHE_EXAMPLES = torch.cuda.is_available() and os.getenv("CACHE_EXAMPLES") == "1"
 MAX_IMAGE_SIZE = int(os.getenv("MAX_IMAGE_SIZE", "1536"))
-USE_TORCH_COMPILE = False
+USE_TORCH_COMPILE = True
 ENABLE_CPU_OFFLOAD = os.getenv("ENABLE_CPU_OFFLOAD") == "1"
 PREVIEW_IMAGES = True
 
@@ -187,16 +187,16 @@ with gr.Blocks(css="style.css") as demo:
             )
             prior_num_inference_steps = gr.Slider(
                 label="Prior Inference Steps",
-                minimum=10,
-                maximum=100,
+                minimum=30,
+                maximum=30,
                 step=1,
-                value=60,
+                value=30,
             )
 
             decoder_guidance_scale = gr.Slider(
                 label="Decoder Guidance Scale",
                 minimum=0,
-                maximum=20,
+                maximum=0,
                 step=0.1,
                 value=0.0,
             )
