@@ -9,9 +9,7 @@ from diffusers.utils import numpy_to_pil
 from diffusers import WuerstchenDecoderPipeline, WuerstchenPriorPipeline
 from diffusers.pipelines.wuerstchen import DEFAULT_STAGE_C_TIMESTEPS
 from previewer.modules import Previewer
-from compel import Compel
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
-
 
 DESCRIPTION = "# Würstchen"
 DESCRIPTION += "\n<p style=\"text-align: center\"><a href='https://huggingface.co/warp-ai/wuerstchen' target='_blank'>Würstchen</a> is a new fast and efficient high resolution text-to-image architecture and model</p>"
@@ -53,7 +51,6 @@ if torch.cuda.is_available():
     else:
         previewer = None
         callback_prior = None
-    compel_proc = Compel(tokenizer=prior_pipeline.tokenizer, text_encoder=prior_pipeline.text_encoder)
 else:
     prior_pipeline = None
     decoder_pipeline = None
@@ -81,16 +78,12 @@ def generate(
 ) -> PIL.Image.Image:
     generator = torch.Generator().manual_seed(seed)
 
-    print("Running compel")
-    prompt_embeds = compel_proc(prompt)
-    negative_prompt_embeds = compel_proc(negative_prompt)
-
     prior_output = prior_pipeline(
-        prompt_embeds=prompt_embeds,
+        prompt=prompt,
         height=height,
         width=width,
         timesteps=DEFAULT_STAGE_C_TIMESTEPS,
-        negative_prompt_embeds=negative_prompt_embeds,
+        negative_prompt=negative_prompt,
         guidance_scale=prior_guidance_scale,
         num_images_per_prompt=num_images_per_prompt,
         generator=generator,
@@ -202,8 +195,8 @@ with gr.Blocks(css="style.css") as demo:
             )
             decoder_num_inference_steps = gr.Slider(
                 label="Decoder Inference Steps",
-                minimum=10,
-                maximum=100,
+                minimum=4,
+                maximum=12,
                 step=1,
                 value=12,
             )
