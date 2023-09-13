@@ -10,6 +10,8 @@ from diffusers import WuerstchenDecoderPipeline, WuerstchenPriorPipeline
 from diffusers.pipelines.wuerstchen import DEFAULT_STAGE_C_TIMESTEPS
 from previewer.modules import Previewer
 from compel import Compel
+from share_btn import community_icon_html, loading_icon_html, share_js
+
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
 
@@ -101,7 +103,7 @@ def generate(
         for _ in range(len(DEFAULT_STAGE_C_TIMESTEPS)):
             r = next(prior_output)
             if isinstance(r, list):
-                yield r
+                yield r, gr.update(visible=False)
         prior_output = r
     
     decoder_output = decoder_pipeline(
@@ -114,7 +116,7 @@ def generate(
         generator=generator,
         output_type="pil",
     ).images
-    yield decoder_output
+    yield decoder_output, gr.update(visible=True)
 
 
 examples = [
@@ -140,6 +142,10 @@ with gr.Blocks(css="style.css") as demo:
             )
             run_button = gr.Button("Run", scale=0)
         result = gr.Gallery(label="Result", show_label=False)
+        with gr.Group(elem_id="share-btn-container", visible=False) as share_group:
+                        community_icon = gr.HTML(community_icon_html)
+                        loading_icon = gr.HTML(loading_icon_html)
+                        share_button = gr.Button("Share to community", elem_id="share-btn")
     with gr.Accordion("Advanced options", open=False):
         negative_prompt = gr.Text(
             label="Negative prompt",
@@ -239,7 +245,7 @@ with gr.Blocks(css="style.css") as demo:
     ).then(
         fn=generate,
         inputs=inputs,
-        outputs=result,
+        outputs=[result,share_group],
         api_name="run",
     )
     negative_prompt.submit(
@@ -266,6 +272,7 @@ with gr.Blocks(css="style.css") as demo:
         outputs=result,
         api_name=False,
     )
-
+    share_button.click(None, [], [], _js=share_js)
+    
 if __name__ == "__main__":
     demo.queue(max_size=20).launch()
